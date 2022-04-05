@@ -1,0 +1,10 @@
+#numpy==1.19.5
+pandas
+sklearn
+#sktime==0.8.0
+scipy
+tensorflow==2.7.0
+tensorflow-addons==0.15.0
+flexible-dotdict
+pydot_ng
+joblib

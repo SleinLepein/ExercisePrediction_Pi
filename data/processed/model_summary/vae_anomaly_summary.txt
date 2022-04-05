@@ -1,0 +1,61 @@
+Model: "vae_anomaly"
+__________________________________________________________________________________________________
+ Layer (type)                   Output Shape         Param #     Connected to                     
+==================================================================================================
+ vae_input (InputLayer)         [(None, 30, 15)]     0           []                               
+                                                                                                  
+ vae_conditional_input_0 (Input  [(None, 30, 8)]     0           []                               
+ Layer)                                                                                           
+                                                                                                  
+ encoder (Functional)           [(None, 2),          38842       ['vae_input[0][0]',              
+                                 (None, 2),                       'vae_conditional_input_0[0][0]']
+                                 (None, 2)]                                                       
+                                                                                                  
+ vae_anomaly_kl_weight (InputLa  [(None, 1)]         0           []                               
+ yer)                                                                                             
+                                                                                                  
+ vae_anomaly_tc_weight (InputLa  [(None, 1)]         0           []                               
+ yer)                                                                                             
+                                                                                                  
+ decoder (Functional)           (None, 30, 15)       48373       ['encoder[0][0]',                
+                                                                  'vae_conditional_input_0[0][0]']
+                                                                                                  
+ lambda (Lambda)                ()                   0           ['vae_anomaly_kl_weight[0][0]']  
+                                                                                                  
+ add_metric (AddMetric)         ()                   0           ['lambda[0][0]']                 
+                                                                                                  
+ kl_loss (KLLoss)               ()                   0           ['encoder[0][1]',                
+                                                                  'encoder[0][2]']                
+                                                                                                  
+ multiply (Multiply)            ()                   0           ['lambda[0][0]',                 
+                                                                  'kl_loss[0][0]']                
+                                                                                                  
+ add_loss (AddLoss)             ()                   0           ['multiply[0][0]']               
+                                                                                                  
+ add_metric_1 (AddMetric)       ()                   0           ['kl_loss[0][0]']                
+                                                                                                  
+ lambda_1 (Lambda)              ()                   0           ['vae_anomaly_tc_weight[0][0]']  
+                                                                                                  
+ add_metric_2 (AddMetric)       ()                   0           ['lambda_1[0][0]']               
+                                                                                                  
+ tc_loss (TCLoss)               ()                   0           ['encoder[0][0]',                
+                                                                  'encoder[0][1]',                
+                                                                  'encoder[0][2]']                
+                                                                                                  
+ multiply_1 (Multiply)          ()                   0           ['lambda_1[0][0]',               
+                                                                  'tc_loss[0][0]']                
+                                                                                                  
+ add_loss_1 (AddLoss)           ()                   0           ['multiply_1[0][0]']             
+                                                                                                  
+ add_metric_3 (AddMetric)       ()                   0           ['tc_loss[0][0]']                
+                                                                                                  
+ add (Add)                      ()                   0           ['kl_loss[0][0]',                
+                                                                  'tc_loss[0][0]']                
+                                                                                                  
+ add_metric_4 (AddMetric)       ()                   0           ['add[0][0]']                    
+                                                                                                  
+==================================================================================================
+Total params: 54,105
+Trainable params: 53,429
+Non-trainable params: 676
+__________________________________________________________________________________________________

@@ -1,0 +1,80 @@
+Model: "decoder"
+__________________________________________________________________________________________________
+ Layer (type)                   Output Shape         Param #     Connected to                     
+==================================================================================================
+ decoder_input (InputLayer)     [(None, 2)]          0           []                               
+                                                                                                  
+ decoder_conditional_input_0 (I  [(None, 30, 8)]     0           []                               
+ nputLayer)                                                                                       
+                                                                                                  
+ laterals (RecursiveReshape)    [(None, 2)]          0           ['decoder_input[0][0]']          
+                                                                                                  
+ conditional_preprocessor (Func  (None, 30)          33110       ['decoder_conditional_input_0[0][
+ tional)                                                         0]']                             
+                                                                                                  
+ concatenate_1 (Concatenate)    (None, 32)           0           ['laterals[0][0]',               
+                                                                  'conditional_preprocessor[2][0]'
+                                                                 ]                                
+                                                                                                  
+ lat_re_Dense_block_0 (Dense)   (None, 4)            132         ['concatenate_1[0][0]']          
+                                                                                                  
+ lat_re_BN_Dense_block_0 (Batch  (None, 4)           16          ['lat_re_Dense_block_0[0][0]']   
+ Normalization)                                                                                   
+                                                                                                  
+ lat_re_activation_Dense_block_  (None, 4)           0           ['lat_re_BN_Dense_block_0[0][0]']
+ 0 (Activation)                                                                                   
+                                                                                                  
+ concatenate_2 (Concatenate)    (None, 34)           0           ['lat_re_activation_Dense_block_0
+                                                                 [0][0]',                         
+                                                                  'conditional_preprocessor[2][0]'
+                                                                 ]                                
+                                                                                                  
+ lat_re_Dense_block_1 (Dense)   (None, 240)          8400        ['concatenate_2[0][0]']          
+                                                                                                  
+ lat_re_BN_Dense_block_1 (Batch  (None, 240)         960         ['lat_re_Dense_block_1[0][0]']   
+ Normalization)                                                                                   
+                                                                                                  
+ lat_re_activation_Dense_block_  (None, 240)         0           ['lat_re_BN_Dense_block_1[0][0]']
+ 1 (Activation)                                                                                   
+                                                                                                  
+ feat_re_reshape_Conv1DTranspos  (None, 30, 8)       0           ['lat_re_activation_Dense_block_1
+ e_block_0 (Reshape)                                             [0][0]']                         
+                                                                                                  
+ feat_re_Conv1DTranspose_block_  (None, 30, 8)       200         ['feat_re_reshape_Conv1DTranspose
+ 0 (Conv1DTranspose)                                             _block_0[0][0]']                 
+                                                                                                  
+ feat_re_CIN_Conv1DTranspose_bl  (None, 30, 8)       480         ['feat_re_Conv1DTranspose_block_0
+ ock_0 (ConditionalNormalizatio                                  [0][0]',                         
+ n)                                                               'conditional_preprocessor[2][0]'
+                                                                 ]                                
+                                                                                                  
+ feat_re_activation_Conv1DTrans  (None, 30, 8)       0           ['feat_re_CIN_Conv1DTranspose_blo
+ pose_block_0 (Activation)                                       ck_0[0][0]']                     
+                                                                                                  
+ feat_re_Conv1DTranspose_block_  (None, 30, 32)      800         ['feat_re_activation_Conv1DTransp
+ 1 (Conv1DTranspose)                                             ose_block_0[0][0]']              
+                                                                                                  
+ feat_re_CIN_Conv1DTranspose_bl  (None, 30, 32)      1920        ['feat_re_Conv1DTranspose_block_1
+ ock_1 (ConditionalNormalizatio                                  [0][0]',                         
+ n)                                                               'conditional_preprocessor[2][0]'
+                                                                 ]                                
+                                                                                                  
+ feat_re_activation_Conv1DTrans  (None, 30, 32)      0           ['feat_re_CIN_Conv1DTranspose_blo
+ pose_block_1 (Activation)                                       ck_1[0][0]']                     
+                                                                                                  
+ feat_re_Conv1DTranspose_block_  (None, 30, 15)      1455        ['feat_re_activation_Conv1DTransp
+ 2 (Conv1DTranspose)                                             ose_block_1[0][0]']              
+                                                                                                  
+ feat_re_CIN_Conv1DTranspose_bl  (None, 30, 15)      900         ['feat_re_Conv1DTranspose_block_2
+ ock_2 (ConditionalNormalizatio                                  [0][0]',                         
+ n)                                                               'conditional_preprocessor[2][0]'
+                                                                 ]                                
+                                                                                                  
+ feat_re_activation_Conv1DTrans  (None, 30, 15)      0           ['feat_re_CIN_Conv1DTranspose_blo
+ pose_block_2 (Activation)                                       ck_2[0][0]']                     
+                                                                                                  
+==================================================================================================
+Total params: 48,373
+Trainable params: 47,697
+Non-trainable params: 676
+__________________________________________________________________________________________________

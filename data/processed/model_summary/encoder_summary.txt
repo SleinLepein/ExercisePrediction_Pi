@@ -1,0 +1,58 @@
+Model: "encoder"
+__________________________________________________________________________________________________
+ Layer (type)                   Output Shape         Param #     Connected to                     
+==================================================================================================
+ encoder_input (InputLayer)     [(None, 30, 15)]     0           []                               
+                                                                                                  
+ encoder_conditional_input_0 (I  [(None, 30, 8)]     0           []                               
+ nputLayer)                                                                                       
+                                                                                                  
+ feat_Conv1D_block_0 (Conv1D)   (None, 30, 32)       1472        ['encoder_input[0][0]']          
+                                                                                                  
+ conditional_preprocessor (Func  (None, 30)          33110       ['encoder_conditional_input_0[0][
+ tional)                                                         0]',                             
+                                                                  'encoder_conditional_input_0[0][
+                                                                 0]']                             
+                                                                                                  
+ feat_CIN_Conv1D_block_0 (Condi  (None, 30, 32)      1920        ['feat_Conv1D_block_0[0][0]',    
+ tionalNormalization)                                             'conditional_preprocessor[0][0]'
+                                                                 ]                                
+                                                                                                  
+ feat_activation_Conv1D_block_0  (None, 30, 32)      0           ['feat_CIN_Conv1D_block_0[0][0]']
+  (Activation)                                                                                    
+                                                                                                  
+ feat_Conv1D_block_1 (Conv1D)   (None, 30, 8)        776         ['feat_activation_Conv1D_block_0[
+                                                                 0][0]']                          
+                                                                                                  
+ feat_CIN_Conv1D_block_1 (Condi  (None, 30, 8)       480         ['feat_Conv1D_block_1[0][0]',    
+ tionalNormalization)                                             'conditional_preprocessor[0][0]'
+                                                                 ]                                
+                                                                                                  
+ feat_activation_Conv1D_block_1  (None, 30, 8)       0           ['feat_CIN_Conv1D_block_1[0][0]']
+  (Activation)                                                                                    
+                                                                                                  
+ flatten_1 (Flatten)            (None, 240)          0           ['feat_activation_Conv1D_block_1[
+                                                                 0][0]']                          
+                                                                                                  
+ concatenate (Concatenate)      (None, 270)          0           ['flatten_1[0][0]',              
+                                                                  'conditional_preprocessor[1][0]'
+                                                                 ]                                
+                                                                                                  
+ lat_Dense_means (Dense)        (None, 2)            542         ['concatenate[0][0]']            
+                                                                                                  
+ lat_Dense_log_vars (Dense)     (None, 2)            542         ['concatenate[0][0]']            
+                                                                                                  
+ lat_latent_vector (NormalSampl  (None, 2)           0           ['lat_Dense_means[0][0]',        
+ ing)                                                             'lat_Dense_log_vars[0][0]']     
+                                                                                                  
+ latents (RecursiveFlatten)     (None, 2)            0           ['lat_latent_vector[0][0]']      
+                                                                                                  
+ means (RecursiveFlatten)       (None, 2)            0           ['lat_Dense_means[0][0]']        
+                                                                                                  
+ log_vars (RecursiveFlatten)    (None, 2)            0           ['lat_Dense_log_vars[0][0]']     
+                                                                                                  
+==================================================================================================
+Total params: 38,842
+Trainable params: 38,654
+Non-trainable params: 188
+__________________________________________________________________________________________________
