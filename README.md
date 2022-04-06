@@ -1,2 +1,2 @@
-# ExercisePrediction_Pi
- Python Code to predict an exercise running on an Raspberry Pi
+# Function for exercise prediction
+The function is supposed to predict exercises on sensor data. The sensor data will be sent to the Raspberry Pi and saved as a csv file, the function will then read the raw data and preprocess it so that the model can make a predictions on it. When a prediction has been made a message containing the type of exercise, the probability of the prediction and the amount of repetitions is sent back to a mobile device.
