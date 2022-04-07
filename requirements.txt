@@ -1,7 +1,7 @@
-numpy==1.19.5
+numpy
 pandas
 sklearn
-sktime==0.8.0
+sktime
 scipy
 flexible-dotdict
 pydot_ng
