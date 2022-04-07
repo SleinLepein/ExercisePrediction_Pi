@@ -8,3 +8,4 @@ tensorflow-addons==0.15.0
 flexible-dotdict
 pydot_ng
 joblib
+watchdog
