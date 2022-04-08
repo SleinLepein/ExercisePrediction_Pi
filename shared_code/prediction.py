@@ -1,5 +1,5 @@
 from shared_code.model import Model
-from shared_code.preprocessing_helpers import build_window_samples, read_raw_data, correct_columns, wrangle_data, construct_input_conditions, construct_input_sensor_data
+from shared_code.preprocessing_helpers import build_window_samples, correct_columns, wrangle_data, read_raw_csv_data, read_raw_json_data
 from shared_code.probability import predict_set
 
 WINDOW_SIZE = 30
@@ -10,7 +10,7 @@ COLUMNS = ['Time Received', 'Time Measured', 'Client', 'Value', 'ValueTwo', 'Val
 def main(df_path):
     try:
         df_path = df_path.replace("\\", "/")[2:]
-        df = read_raw_data(df_path)
+        df = read_raw_csv_data(df_path)
     except Exception as ex:
         print(f"Error while reading the data\n   {ex}\n")
     else:

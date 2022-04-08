@@ -1,4 +1,3 @@
-from datetime import datetime, timedelta
 import time 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
@@ -6,13 +5,11 @@ import shared_code.prediction as prediction
 
 def startObserver():
     observer = Observer()
-    event_handler = FileHandler() # create event handler
-    # set observer to use created handler in directory
-    observer.schedule(event_handler, path='./raw_data')
+    file_event_handler = FileHandler()
+    observer.schedule(file_event_handler, path='./raw_data')
     observer.start()
     print("Observer started ...")
 
-    # sleep until keyboard interrupt, then stop + rejoin the observer
     try:
         while True:
             time.sleep(5)
@@ -23,14 +20,13 @@ def startObserver():
 
 class FileHandler(FileSystemEventHandler):
     def __init__(self):
-        self.last_modified = datetime.now()
+        self.recent_run_time = time.time()
     
     def on_modified(self, event):
-        if datetime.now() - self.last_modified < timedelta(seconds=5):
+        if time.time() - self.recent_run_time < 5.0:
             return
         else:
-            self.last_modified = datetime.now()
-        # do something, eg. call your function to process the image
+            self.recent_run_time = time.time()
         print(f"File {event.src_path} got modified")
         prediction.main(event.src_path)
 

@@ -3,13 +3,13 @@ import pandas as pd
 import datetime as dt
 import joblib
 
-def read_raw_data(path):
-    """ Reads in the raw data
+def read_raw_csv_data(path):
+    """ Reads in the csv raw data
 
     Parameters
     ----------
     path : PATH
-    file_format : FORMAT (CSV, JSON)
+    file_format : FORMAT (CSV)
 
     Returns
     -------
@@ -17,8 +17,24 @@ def read_raw_data(path):
         Containing the raw data
 
     """
-    #return pd.read_csv(path, sep=';', engine='python')
     return pd.read_csv(path, sep=';')
+
+def read_raw_json_data(path):
+    """ Reads in the raw json data
+
+    Parameters
+    ----------
+    path : PATH
+    file_format : FORMAT (JSON)
+
+    Returns
+    -------
+    pd.DataFrame
+    Containing the raw data
+
+    """
+    pass
+    #return pd.read_json(path, sep=';')
 
 def correct_columns(df, COLUMNS):
     """
