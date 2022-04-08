@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 import time 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
-import prediction
+import shared_code.prediction as prediction
 
 def startObserver():
     observer = Observer()
@@ -32,10 +32,7 @@ class FileHandler(FileSystemEventHandler):
             self.last_modified = datetime.now()
         # do something, eg. call your function to process the image
         print(f"File {event.src_path} got modified")
-        start_time = time.time()
         prediction.main(event.src_path)
-        end_time = time.time()
-        print(end_time - start_time)
 
 if __name__ == "__main__":
     startObserver()

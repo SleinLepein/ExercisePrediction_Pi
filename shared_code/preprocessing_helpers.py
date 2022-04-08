@@ -17,6 +17,7 @@ def read_raw_data(path):
         Containing the raw data
 
     """
+    #return pd.read_csv(path, sep=';', engine='python')
     return pd.read_csv(path, sep=';')
 
 def correct_columns(df, COLUMNS):

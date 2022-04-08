@@ -9,6 +9,7 @@ COLUMNS = ['Time Received', 'Time Measured', 'Client', 'Value', 'ValueTwo', 'Val
 
 def main(df_path):
     try:
+        df_path = df_path.replace("\\", "/")[2:]
         df = read_raw_data(df_path)
     except Exception as ex:
         print(f"Error while reading the data\n   {ex}\n")
@@ -45,6 +46,4 @@ def main(df_path):
                 print(f"An error occured:\n   {ex}\n")
         else:
             print(f"Not enough data to make a Prediction [{df.shape[0]}/{MIN_ROWS} rows]\n")
-
-if __name__ == "__main__":
-    main()
+            
