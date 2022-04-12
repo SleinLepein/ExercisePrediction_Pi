@@ -12,7 +12,7 @@ def main(df_path):
         df_path = df_path.replace("\\", "/")[2:]
         df = read_raw_csv_data(df_path)
     except Exception as ex:
-        print(f"Error while reading the data\n   {ex}\n")
+        return ex
     else:
         # Approximately 300 Rows of Raw Data is one Batch, for a Prediction one Batch is enough but since we want to predict sets we need atleast 2 Batches (~600 Rows)
         if df.shape[0] >= MIN_ROWS:
@@ -41,9 +41,9 @@ def main(df_path):
                 # send message to app
                 message = f"\nStart Time: {exercise_start_time[11:19]}\nEnd Time: {exercise_end_time[11:19]}\nExercise: {exercise}\
                     \nRepetitions: {repetitions}\nProbability: {probability:.2f}\n"
-                print(message)
+                return message
             except Exception as ex:
-                print(f"An error occured:\n   {ex}\n")
+                return ex
         else:
-            print(f"Not enough data to make a Prediction [{df.shape[0]}/{MIN_ROWS} rows]\n")
+            return f"Not enough data to make a Prediction [{df.shape[0]}/{MIN_ROWS} rows]\n"
             

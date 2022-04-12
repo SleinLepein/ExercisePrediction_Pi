@@ -28,7 +28,9 @@ class FileHandler(FileSystemEventHandler):
         else:
             self.recent_run_time = time.time()
         print(f"File {event.src_path} got modified")
-        prediction.main(event.src_path)
+        pred = prediction.main(event.src_path)
+        print(pred)
+        print(type(pred))
 
 if __name__ == "__main__":
     startObserver()
