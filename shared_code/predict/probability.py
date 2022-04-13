@@ -1,5 +1,5 @@
 import numpy as np
-from shared_code.counting_reps import integrate_acceleration
+from shared_code.predict.counting_reps import integrate_acceleration
 
 HORIZONTAL_DIST = 5
 VERTICAL_DIST_LOWER_BOUND = 0.35

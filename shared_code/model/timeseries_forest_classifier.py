@@ -1,8 +1,8 @@
 from sklearn.pipeline import Pipeline
 from sktime.classification.interval_based import TimeSeriesForestClassifier
 from sktime.transformations.panel.compose import ColumnConcatenator
-from shared_code.training_data import TrainingData
-from shared_code.model import Model
+from shared_code.model.training_data import TrainingData
+from shared_code.model.model import Model
 
 class ForestClassifierTrainer:
     """
