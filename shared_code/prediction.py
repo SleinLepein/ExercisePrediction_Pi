@@ -29,7 +29,7 @@ def main(df_path):
 
                 # make prediction
                 list_of_predicted_batches = model.predict(df_prediction_samples)
-                print(f"\nPrediction:\n{list_of_predicted_batches} [{len(list_of_predicted_batches)}]\n")
+                #print(f"\nPrediction:\n{list_of_predicted_batches} [{len(list_of_predicted_batches)}]\n")
 
                 # get exercise, probability, repetitions and bool if data should be deleted afterwards (DATA IS CURRENTLY NEVER DELETED, IMPLEMENTED LATER)
                 exercise, probability, repetitions, delete_file = predict_set(list_of_predicted_batches, df)
