@@ -1,8 +1,9 @@
 import time
 from watchdog.observers.polling import PollingObserver
 from watchdog.events import FileSystemEventHandler
-import shared_code.predict.prediction as prediction
-import shared_code.sender.sender as sender
+import src.predict.prediction as prediction
+import src.sender.sender as sender
+import src.processing.move_data as mv
 import os
 
 PATH = "./raw_data"
@@ -10,6 +11,9 @@ PATH = "./raw_data"
 def start_Observer():
     observer = PollingObserver()
     file_event_handler = File_Handler()
+    if os.path.isdir(PATH) == False:
+        os.mkdir(PATH)
+
     observer.schedule(file_event_handler, path=PATH)
     observer.start()
     print("Observer started ...")
@@ -20,6 +24,11 @@ def start_Observer():
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
+    print("\nMove files from /raw_data to /old_data? [Y/N]")
+    move_files = input()
+    if move_files in ["y", "Y", "yes", "Yes", "ye", "Ye"]:
+        mv.move_data(PATH)
+        print("Data moved!")
 
 class File_Handler(FileSystemEventHandler):
     def __init__(self):
