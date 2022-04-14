@@ -17,7 +17,7 @@ def integrate_acceleration(df, exercise, horizontal_dist, vertical_dist_lower_bo
         Determines the maximum vertical distance between a repetition and the surrounding points in the signal.
     """
 
-    # Not all mappings are final
+    # Not all mappings are final (Beinstrecker is just a placeholder)
     exercise_sensor_mapping = { 
                                 'Ausfallschritte': ['gyro_bar_Value', 'gyro_bar_ValueTwo', 'gyro_bar_ValueThree'],
                                 'Brustpresse': ['gyro_bar_Value', 'gyro_bar_ValueTwo', 'gyro_bar_ValueThree'],
@@ -26,7 +26,7 @@ def integrate_acceleration(df, exercise, horizontal_dist, vertical_dist_lower_bo
                                 'Crossover': ['gyro_cable_left_ValueThree', 'gyro_cable_right_ValueThree'],
                                 'Squats': ['gyro_bar_ValueThree'],
                                 'Trizepskabelzug': ['gyro_cable_left_ValueThree', 'gyro_cable_right_ValueThree'],
-                                'Beinstrecker': ['']
+                                'Beinstrecker': ['gyro_bar_Value', 'gyro_bar_ValueTwo', 'gyro_bar_ValueThree']
                                }
 
     relevant_sensor_list = exercise_sensor_mapping[exercise]
