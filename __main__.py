@@ -24,7 +24,11 @@ def start_Observer():
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
-    mv.move_data(PATH)
+    print("\nMove files from /raw_data to /old_data? [Y/N]")
+    move_files = input()
+    if move_files in ["y", "Y", "yes", "Yes", "ye", "Ye"]:
+        mv.move_data(PATH)
+        print("Data moved!")
 
 class File_Handler(FileSystemEventHandler):
     def __init__(self):

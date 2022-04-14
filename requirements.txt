@@ -3,7 +3,5 @@ pandas
 scikit-learn==0.24.2
 sktime
 scipy
-flexible-dotdict
-pydot_ng
 joblib
 watchdog
