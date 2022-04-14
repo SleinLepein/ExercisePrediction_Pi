@@ -1,4 +1,4 @@
-from shared_code.model.unpickler import *
+from src.model.unpickler import *
 import numpy as np
 
 class Model:

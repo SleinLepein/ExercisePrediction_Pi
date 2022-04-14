@@ -1,6 +1,6 @@
-from shared_code.model.model import Model
-from shared_code.preprocessing.preprocessing_helpers import build_window_samples, correct_columns, wrangle_data, read_raw_csv_data, read_raw_json_data
-from shared_code.predict.probability import predict_set
+from src.model.model import Model
+from src.preprocessing.preprocessing_helpers import build_window_samples, correct_columns, wrangle_data, read_raw_csv_data, read_raw_json_data
+from src.predict.probability import predict_set
 
 WINDOW_SIZE = 30
 MODEL_EXERCISE_PATH = "model/model.pkl"

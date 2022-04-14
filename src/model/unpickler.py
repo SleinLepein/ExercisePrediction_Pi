@@ -5,7 +5,7 @@ class Unpickler(pickle.Unpickler):
     def find_class(self, module, name):
         renamed_module = module
         if module == "train_model.domain.timeseries_forest_classifier":
-            renamed_module = "shared_code.model.timeseries_forest_classifier"
+            renamed_module = "src.model.timeseries_forest_classifier"
         return super(Unpickler, self).find_class(renamed_module, name)
 
 def unpickler_load(file_obj):
