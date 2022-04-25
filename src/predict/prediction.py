@@ -14,7 +14,7 @@ VERTICAL_DIST_UPPER_BOUND = 1000 # setting the upper bound this high renders it 
 
 def construct_message(df_path):
     try:
-        df_path = df_path.replace("\\", "/")[2:]
+        #df_path = df_path.replace("\\", "/")[2:]
         df = read_raw_csv_data(df_path)
     except Exception as ex:
         return ex, False
