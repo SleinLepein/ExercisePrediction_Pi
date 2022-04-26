@@ -5,3 +5,5 @@ sktime
 scipy
 joblib
 watchdog
+azure-storage-blob
+azure-core
