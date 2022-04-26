@@ -1,4 +1,4 @@
 def send_to_app(msg):
-    # placeholder, mqtt broker needs to be implemented
+    # placeholder, mqtt broker or flask server needs to be implemented
     # sends message to app
     print(msg)

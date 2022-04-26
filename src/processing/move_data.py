@@ -1,10 +1,10 @@
 import os
 
-PATH_TO = "./old_data"
+PATH = "./old_data"
 
 def move_data(path_from):
-    if os.path.isdir(PATH_TO) == False:
-        os.mkdir(PATH_TO)
+    if os.path.isdir(PATH) == False:
+        os.mkdir(PATH)
 
     files_raw_data = [path_from + "/" + x for x in os.listdir(path_from)]
     files_old_data = [x.replace("raw", "old") for x in files_raw_data]
