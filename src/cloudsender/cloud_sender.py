@@ -2,7 +2,7 @@ from azure.storage.blob import ContainerClient
 import os
 from azure.core import exceptions as ae
 
-CONNECTION_STR = "DefaultEndpointsProtocol=https;AccountName=inputdatapreprocessing;AccountKey=xsZo9J4xXVGTTQCrSBT9Bv4wMvSDWnzhbdYAxOJRTSi0ZGtRrsKtl3O+iFtNsycOcR7VIvwzfQUI7F77RMj64g==;EndpointSuffix=core.windows.net"
+CONNECTION_STR = ""
 CONTAINER_NAME = "csvbackup"
 
 def upload_to_azure_cloud(path):
