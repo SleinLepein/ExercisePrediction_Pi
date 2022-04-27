@@ -1,10 +1,11 @@
 import time
 import os
+from requests import delete
 from watchdog.observers.polling import PollingObserver
 from watchdog.events import FileSystemEventHandler
 from src.predict.prediction import construct_message
 from src.sender.sender import send_to_app
-from src.processing.move_data import move_data
+from src.processing.change_data import move_data, delete_data
 from src.cloudsender.cloud_sender import upload_to_azure_cloud
 
 PATH = "./raw_data"
@@ -26,10 +27,14 @@ def start_Observer():
         observer.stop()
     observer.join()
     
-    if input("\nMove files from /raw_data to /old_data? [Y/N]\n") in ["y", "Y", "ye", "Ye", "yes", "Yes"]:
-        move_data(PATH)
-        #upload_to_azure_cloud(PATH)
-        print("Data moved!")
+    # Try sending data to cloud, if data was send to cloud delete it locally
+    if input("\nMove files to the cloud? [Y/N]\n") in ["y", "Y", "ye", "Ye", "yes", "Yes"]:
+        try:
+            upload_to_azure_cloud(PATH)
+        except:
+            print("An error occured when uploading data to the cloud")
+        else:
+            delete_data(PATH)
 
 class File_Handler(FileSystemEventHandler):
     def __init__(self):
@@ -53,7 +58,7 @@ class File_Handler(FileSystemEventHandler):
         # Prevent the prediction to run on any non-csv-file
         if mod_file_path.endswith(".csv"):
             print(f"Event Type:\t{event.event_type}\nPath:\t\t{mod_file_path}\nTime:\t\t{time.asctime()}\n")
-            pred, success = construct_message(mod_file_path)
+            pred, _, success = construct_message(mod_file_path)
             if success:
                 print("Sending ...")
                 send_to_app(pred)

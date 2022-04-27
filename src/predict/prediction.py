@@ -16,7 +16,7 @@ def construct_message(df_path):
     try:
         df = read_raw_csv_data(df_path)
     except Exception as ex:
-        return ex, False
+        return ex, None, False
     else:
         # Approximately 300 Rows of Raw Data is one Batch, for a Prediction one Batch is enough but since we want to predict sets we need atleast 2 Batches (~600 Rows)
         if df.shape[0] >= MIN_ROWS:
@@ -31,7 +31,7 @@ def construct_message(df_path):
 
                 # make prediction
                 list_of_predicted_batches = model.predict(df_prediction_samples)
-                #print(f"\nPrediction:\n{list_of_predicted_batches} [{len(list_of_predicted_batches)}]\n")
+                batch_prediction_string = f"\nPrediction:\n{list_of_predicted_batches} [{len(list_of_predicted_batches)}]\n"
 
                 # get exercise, probability, repetitions and bool if data should be deleted afterwards (DATA IS CURRENTLY NEVER DELETED, IMPLEMENTED LATER)
                 exercise, probability, repetitions, delete_file, set_finished = predict_df(list_of_predicted_batches, df)
@@ -42,12 +42,12 @@ def construct_message(df_path):
 
                 # construct message
                 message = f"\nStart Time: {exercise_start_time[11:19]}\nEnd Time: {exercise_end_time[11:19]}\nExercise: {exercise}\
-                    \nRepetitions: {repetitions}\nProbability: {probability:.2f}\nSet finished?: {set_finished}\n"
-                return message, True
+                    \nRepetitions: {repetitions}\nProbability: {probability:.2f}\nSet finished: {set_finished}\n"
+                return message, batch_prediction_string, True
             except Exception as ex:
-                return ex, False
+                return ex, None, False
         else:
-            return f"Not enough data to make a Prediction [{df.shape[0]}/{MIN_ROWS} rows]\n", False
+            return f"Not enough data to make a Prediction [{df.shape[0]}/{MIN_ROWS} rows]\n", None, False
 
 # does not wait for sets to be finished, just predicts everything in the df
 def predict_df(list_of_predicted_batches, df):
