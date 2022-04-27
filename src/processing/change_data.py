@@ -3,7 +3,7 @@ import os
 PATH = "./old_data"
 
 def move_data(path_from):
-    if os.path.isdir(PATH) == False:
+    if not os.path.isdir(PATH):
         os.mkdir(PATH)
 
     files_raw_data = [path_from + "/" + x for x in os.listdir(path_from)]
@@ -12,7 +12,7 @@ def move_data(path_from):
         os.replace(files_raw_data[i], files_old_data[i])
     
 def delete_data(path_from):
-    if os.path.isdir(path_from) == False:
+    if not os.path.isdir(path_from):
         return None
 
     files_raw_data = [path_from + "/" + x for x in os.listdir(path_from)]

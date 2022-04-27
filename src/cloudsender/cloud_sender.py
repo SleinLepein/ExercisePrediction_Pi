@@ -1,6 +1,6 @@
 from azure.storage.blob import ContainerClient
 import os
-from azure.core import exceptions as ae
+from azure.core import exceptions as azure_exception
 from src.predict.prediction import construct_message
 
 CONNECTION_STR = ""
@@ -20,7 +20,7 @@ def upload_to_azure_cloud(path):
                 pred_txt.write(pred)
                 pred_txt.close()
                 blob_client = container_client.get_blob_client(files_raw_data[i])
-                with open(files_raw_data[i], "yolo") as data:
+                with open(files_raw_data[i], "rb") as data:
                     blob_client.upload_blob(data)
                     print(f"File: {files_raw_data[i]} uploaded to azure")
                 pred_txt_file = f"raw_data/{file_name}.txt"
@@ -28,5 +28,5 @@ def upload_to_azure_cloud(path):
                 with open(pred_txt_file, "rb") as data:
                     blob_client.upload_blob(data)
                     print(f"File: {pred_txt_file} uploaded to azure")
-        except ae.ResourceExistsError:
+        except azure_exception.ResourceExistsError:
             print(f"skipping file {file_name} as there is already a file with that name in the container")

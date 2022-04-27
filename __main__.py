@@ -1,11 +1,10 @@
 import time
 import os
-from requests import delete
 from watchdog.observers.polling import PollingObserver
 from watchdog.events import FileSystemEventHandler
 from src.predict.prediction import construct_message
 from src.sender.sender import send_to_app
-from src.processing.change_data import move_data, delete_data
+from src.processing.change_data import delete_data
 from src.cloudsender.cloud_sender import upload_to_azure_cloud
 
 PATH = "./raw_data"
@@ -13,7 +12,7 @@ PATH = "./raw_data"
 def start_Observer():
     observer = PollingObserver()
     file_event_handler = File_Handler()
-    if os.path.isdir(PATH) == False:
+    if not os.path.isdir(PATH):
         os.mkdir(PATH)
 
     observer.schedule(file_event_handler, path=PATH)
@@ -27,8 +26,8 @@ def start_Observer():
         observer.stop()
     observer.join()
     
-    # Try sending data to cloud, if data was send to cloud delete it locally
-    if input("\nMove files to the cloud? [Y/N]\n") in ["y", "Y", "ye", "Ye", "yes", "Yes"]:
+    # Try sending data to cloud and if it was successful delete if locally
+    if input("\nMove files to the cloud and delete locally? [Y/N]\n") in ["y", "Y", "ye", "Ye", "yes", "Yes"]:
         try:
             upload_to_azure_cloud(PATH)
         except:
