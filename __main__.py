@@ -16,7 +16,7 @@ def start_observer():
     if not os.path.isdir(PATH):
         os.mkdir(PATH)
 
-    observer.schedule(file_event_handler, path=PATH)
+    observer.schedule(file_event_handler, path=PATH, recursive=False)
     observer.start()
     print("Observer started ...\n")
 
