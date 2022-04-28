@@ -10,7 +10,10 @@ def move_data(path_from):
     files_raw_data = [path_from + "/" + x for x in os.listdir(path_from)]
     files_old_data = [x.replace("raw", "old") for x in files_raw_data]
     for i in range(len(files_raw_data)):
-        os.replace(files_raw_data[i], files_old_data[i])
+        try:
+            os.replace(files_raw_data[i], files_old_data[i])
+        except PermissionError:
+            pass
 
 
 def delete_data(path_from):
@@ -19,4 +22,7 @@ def delete_data(path_from):
 
     files_raw_data = [path_from + "/" + x for x in os.listdir(path_from)]
     for i in range(len(files_raw_data)):
-        os.remove(files_raw_data[i])
+        try:
+            os.remove(files_raw_data[i])
+        except PermissionError:
+            pass
