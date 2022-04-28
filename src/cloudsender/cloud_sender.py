@@ -18,11 +18,11 @@ def upload_to_azure_cloud(path):
             files_raw_data[i] = files_raw_data[i].replace("\\", "/")[2:]
             prediction, batch, success = construct_message(files_raw_data[i])
             if success:
-                prediction_file = open(f"raw_data/{filename}.txt", 'w')
-                prediction_file.write(f"{filename}.csv\n")
-                prediction_file.write(batch)
-                prediction_file.write(prediction)
-                prediction_file.close()
+                prediction_filename = f"raw_data/{filename}.txt"
+                with open(prediction_filename, 'w') as data:
+                    data.write(f"{filename}.csv\n")
+                    data.write(batch)
+                    data.write(prediction)
 
                 blob_client = container_client.get_blob_client(
                     f"{now.year}/{now.month}/{now.day}/{filename}/{filename}.csv")
@@ -30,7 +30,6 @@ def upload_to_azure_cloud(path):
                     blob_client.upload_blob(data)
                     print(f"File: {files_raw_data[i]} uploaded to azure")
 
-                prediction_filename = f"raw_data/{filename}.txt"
                 blob_client = container_client.get_blob_client(
                     f"{now.year}/{now.month}/{now.day}/{filename}/{filename}.txt")
                 with open(prediction_filename, "rb") as data:
