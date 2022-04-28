@@ -34,7 +34,7 @@ def construct_message(df_path):
 
                 # make prediction
                 list_of_predicted_batches = model.predict(df_prediction_samples)
-                batch_prediction_string = f"\n{list_of_predicted_batches}\n"
+                batch_prediction = f"\n{list_of_predicted_batches}\n"
 
                 # get exercise, probability, repetitions and bool if data should be deleted afterwards (DATA IS CURRENTLY NEVER DELETED, IMPLEMENTED LATER)
                 exercise, probability, repetitions, delete_file, set_finished = predict_df(list_of_predicted_batches,
@@ -47,7 +47,7 @@ def construct_message(df_path):
                 # construct message
                 message = f"\nStart Time: {exercise_start_time[11:19]}\nEnd Time: {exercise_end_time[11:19]}\nExercise: {exercise}\
                     \nRepetitions: {repetitions}\nProbability: {probability:.2f}\nSet finished: {set_finished}\n"
-                return message, batch_prediction_string, True
+                return message, batch_prediction, True
             except Exception as ex:
                 return ex, None, False
         else:

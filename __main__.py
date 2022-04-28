@@ -27,7 +27,7 @@ def start_observer():
         observer.stop()
     observer.join()
 
-    # Try sending data to cloud and if it was successful delete if locally
+    # Try sending data to cloud and if it was successful delete it locally
     if input("\nMove files to the cloud and delete locally? [Y/N]\n") in ["y", "Y", "ye", "Ye", "yes", "Yes"]:
         try:
             upload_to_azure_cloud(PATH)
@@ -39,27 +39,28 @@ def start_observer():
 
 class FileHandler(FileSystemEventHandler):
     def __init__(self):
-        self.recent_run_time = time.time()
+        self.last_run_time = time.time()
 
     def on_modified(self, event):
         # Prevent the function from running multiple times in a row by checking previous runtime
-        if time.time() - self.recent_run_time < 5.0:
+        if time.time() - self.last_run_time < 5.0:
             return None
         else:
-            self.recent_run_time = time.time()
-        # Filepath can be corrupted and not show to the file but only the folder, if that's the case we look at the recently edited file
+            self.last_run_time = time.time()
+        # Filepath can be corrupted and not show to the file but only the folder
+        # if that's the case we look at the recently edited file
         if event.is_directory:
             try:
                 files_in_folder = [event.src_path + "/" + x for x in os.listdir(event.src_path)]
-                mod_file_path = max(files_in_folder, key=os.path.getctime)
+                file_path = max(files_in_folder, key=os.path.getctime)
             except ValueError:
                 return None
         else:
-            mod_file_path = event.src_path
+            file_path = event.src_path
         # Prevent the prediction to run on any non-csv-file
-        if mod_file_path.endswith(".csv"):
-            print(f"Event Type:\t{event.event_type}\nPath:\t\t{mod_file_path}\nTime:\t\t{time.asctime()}\n")
-            prediction, _, success = construct_message(mod_file_path)
+        if file_path.endswith(".csv"):
+            print(f"Event Type:\t{event.event_type}\nPath:\t\t{file_path}\nTime:\t\t{time.asctime()}\n")
+            prediction, _, success = construct_message(file_path)
             if success:
                 print("Sending ...")
                 send_to_app(prediction)
