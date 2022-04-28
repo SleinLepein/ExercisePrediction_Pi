@@ -9,9 +9,10 @@ from src.cloudsender.cloud_sender import upload_to_azure_cloud
 
 PATH = "./raw_data"
 
-def start_Observer():
+
+def start_observer():
     observer = PollingObserver()
-    file_event_handler = File_Handler()
+    file_event_handler = FileHandler()
     if not os.path.isdir(PATH):
         os.mkdir(PATH)
 
@@ -25,17 +26,18 @@ def start_Observer():
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
-    
+
     # Try sending data to cloud and if it was successful delete if locally
     if input("\nMove files to the cloud and delete locally? [Y/N]\n") in ["y", "Y", "ye", "Ye", "yes", "Yes"]:
         try:
             upload_to_azure_cloud(PATH)
-        except:
-            print("An error occured when uploading data to the cloud")
+        except Exception as ex:
+            print(f"An error occurred when uploading data to the cloud\n{ex}")
         else:
             delete_data(PATH)
 
-class File_Handler(FileSystemEventHandler):
+
+class FileHandler(FileSystemEventHandler):
     def __init__(self):
         self.recent_run_time = time.time()
 
@@ -45,7 +47,7 @@ class File_Handler(FileSystemEventHandler):
             return None
         else:
             self.recent_run_time = time.time()
-        # Filepath can be corrupted and not show to the file but only the folder, if thats the case we look at the recently edited file
+        # Filepath can be corrupted and not show to the file but only the folder, if that's the case we look at the recently edited file
         if event.is_directory:
             try:
                 files_in_folder = [event.src_path + "/" + x for x in os.listdir(event.src_path)]
@@ -57,12 +59,13 @@ class File_Handler(FileSystemEventHandler):
         # Prevent the prediction to run on any non-csv-file
         if mod_file_path.endswith(".csv"):
             print(f"Event Type:\t{event.event_type}\nPath:\t\t{mod_file_path}\nTime:\t\t{time.asctime()}\n")
-            pred, _, success = construct_message(mod_file_path)
+            prediction, _, success = construct_message(mod_file_path)
             if success:
                 print("Sending ...")
-                send_to_app(pred)
+                send_to_app(prediction)
             else:
-                print(f"Error:\n{pred}")
+                print(f"Error:\n{prediction}")
+
 
 if __name__ == "__main__":
-    start_Observer()
+    start_observer()
