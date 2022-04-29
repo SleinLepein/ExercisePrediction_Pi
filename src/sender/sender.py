@@ -13,6 +13,6 @@ client.connect(broker,port)
 
 
 def send_to_app(msg):
-    client.publish(topic,msg)
+    client.publish(topic,msg,1,False)
     print("Published in "+topic)
     print(msg)
