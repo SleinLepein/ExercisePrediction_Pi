@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 class TrainingData:
     def __init__(self, data: pd.DataFrame = None):
         self.data = data
@@ -21,8 +22,8 @@ class TrainingData:
             raise ValueError('Data is not conform to training data port definition: Column names')
 
         # Check timesteps
-        df_ = self.data.\
-            drop('label', axis=1).\
+        df_ = self.data. \
+            drop('label', axis=1). \
             applymap(lambda x: x.__len__())
         format_ok = (df_ == self.number_of_timesteps).all().all()
         if not format_ok:

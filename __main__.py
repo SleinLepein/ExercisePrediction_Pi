@@ -4,18 +4,19 @@ from watchdog.observers.polling import PollingObserver
 from watchdog.events import FileSystemEventHandler
 from src.predict.prediction import construct_message
 from src.sender.sender import send_to_app
-from src.processing.move_data import move_data
+from src.processing.change_data import delete_data
 from src.cloudsender.cloud_sender import upload_to_azure_cloud
 
 PATH = "./raw_data"
 
-def start_Observer():
+
+def start_observer():
     observer = PollingObserver()
-    file_event_handler = File_Handler()
-    if os.path.isdir(PATH) == False:
+    file_event_handler = FileHandler()
+    if not os.path.isdir(PATH):
         os.mkdir(PATH)
 
-    observer.schedule(file_event_handler, path=PATH)
+    observer.schedule(file_event_handler, path=PATH, recursive=False)
     observer.start()
     print("Observer started ...\n")
 
@@ -25,40 +26,47 @@ def start_Observer():
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
-    
-    if input("\nMove files from /raw_data to /old_data? [Y/N]\n") in ["y", "Y", "ye", "Ye", "yes", "Yes"]:
-        move_data(PATH)
-        #upload_to_azure_cloud(PATH)
-        print("Data moved!")
 
-class File_Handler(FileSystemEventHandler):
+    # Try sending data to cloud and if it was successful delete it locally
+    if input("\nMove files to the cloud and delete locally? [Y/N]\n") in ["y", "Y", "ye", "Ye", "yes", "Yes"]:
+        try:
+            upload_to_azure_cloud(PATH)
+        except Exception as ex:
+            print(f"An error occurred when uploading data to the cloud\n{ex}")
+        else:
+            delete_data(PATH)
+
+
+class FileHandler(FileSystemEventHandler):
     def __init__(self):
-        self.recent_run_time = time.time()
+        self.last_run_time = time.time()
 
     def on_modified(self, event):
         # Prevent the function from running multiple times in a row by checking previous runtime
-        if time.time() - self.recent_run_time < 5.0:
+        if time.time() - self.last_run_time < 5.0:
             return None
         else:
-            self.recent_run_time = time.time()
-        # Filepath can be corrupted and not show to the file but only the folder, if thats the case we look at the recently edited file
+            self.last_run_time = time.time()
+        # Filepath can be corrupted and not show to the file but only the folder
+        # if that's the case we look at the recently edited file
         if event.is_directory:
             try:
                 files_in_folder = [event.src_path + "/" + x for x in os.listdir(event.src_path)]
-                mod_file_path = max(files_in_folder, key=os.path.getctime)
+                file_path = max(files_in_folder, key=os.path.getctime)
             except ValueError:
                 return None
         else:
-            mod_file_path = event.src_path
+            file_path = event.src_path
         # Prevent the prediction to run on any non-csv-file
-        if mod_file_path.endswith(".csv"):
-            print(f"Event Type:\t{event.event_type}\nPath:\t\t{mod_file_path}\nTime:\t\t{time.asctime()}\n")
-            pred, success = construct_message(mod_file_path)
+        if file_path.endswith(".csv"):
+            print(f"Event Type:\t{event.event_type}\nPath:\t\t{file_path}\nTime:\t\t{time.asctime()}\n")
+            prediction, _, success = construct_message(file_path)
             if success:
                 print("Sending ...")
-                send_to_app(pred)
+                send_to_app(prediction)
             else:
-                print(f"Error:\n{pred}")
+                print(f"Error:\n{prediction}")
+
 
 if __name__ == "__main__":
-    start_Observer()
+    start_observer()

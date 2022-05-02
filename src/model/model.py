@@ -1,6 +1,7 @@
 from src.model.unpickler import *
 import numpy as np
 
+
 class Model:
     def __init__(self, model=None):
         self.model = model
@@ -18,11 +19,11 @@ class Model:
             self.model = unpickler_load(input_file)
         return self
 
-    def predict(self, pred_data):
+    def predict(self, prediction_data):
         try:
-            pred_proba = np.array([max(x) for x in self.model.clf.predict_proba(pred_data[self.model.features])])
-            pred_class = self.model.clf.predict(pred_data[self.model.features])
-            return np.stack([pred_class, pred_proba]).T
+            prediction_probability = np.array([max(x) for x in self.model.clf.predict_proba(prediction_data[self.model.features])])
+            prediction_class = self.model.clf.predict(prediction_data[self.model.features])
+            return np.stack([prediction_class, prediction_probability]).T
         except KeyError:
             raise KeyError('The model expects sensors which are missing in prediction data: ' +
-                           ' '.join(list(set(self.model.features) - set(pred_data.columns))))
+                           ' '.join(list(set(self.model.features) - set(prediction_data.columns))))
