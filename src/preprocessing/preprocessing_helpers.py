@@ -3,13 +3,13 @@ import pandas as pd
 import datetime as dt
 import joblib
 
+
 def read_raw_csv_data(path):
     """ Reads in the csv raw data
 
     Parameters
     ----------
     path : PATH
-    file_format : FORMAT (CSV)
 
     Returns
     -------
@@ -19,24 +19,8 @@ def read_raw_csv_data(path):
     """
     return pd.read_csv(path, sep=';')
 
-def read_raw_json_data(path):
-    """ Reads in the raw json data
 
-    Parameters
-    ----------
-    path : PATH
-    file_format : FORMAT (JSON)
-
-    Returns
-    -------
-    pd.DataFrame
-    Containing the raw data
-
-    """
-    pass
-    #return pd.read_json(path, sep=';')
-
-def correct_columns(df, COLUMNS):
+def correct_columns(df, columns):
     """
 
     Parameters
@@ -44,7 +28,7 @@ def correct_columns(df, COLUMNS):
     df : pd.DataFrame
         Containing the raw DataFrame
 
-    COLUMNS
+    columns
         List containing the correct column names and in order
 
     Returns
@@ -53,12 +37,13 @@ def correct_columns(df, COLUMNS):
         DataFrame without unnecessary columns and columns in the right order
 
     """
-    columns_not_needed = list(set(list(df)).symmetric_difference(set(COLUMNS)))
+    columns_not_needed = list(set(list(df)).symmetric_difference(set(columns)))
     df = df.drop(columns_not_needed, axis=1)
-    df = df[COLUMNS]
+    df = df[columns]
     return df
 
-def time_binning(df, sampling_rate_for_time_binnings='200ms'):
+
+def time_binning(df, sampling_rate_for_time_binning='200ms'):
     """
 
     Parameters
@@ -77,13 +62,14 @@ def time_binning(df, sampling_rate_for_time_binnings='200ms'):
     """
     df['Time Measured'] = df['Time Measured'].apply(lambda x: x[:-1] if type(x) == str else x)
     df['Time Measured'] = pd.to_datetime(df['Time Measured'])
-    df['Time Measured'] = df['Time Measured'].dt.round(sampling_rate_for_time_binnings)
+    df['Time Measured'] = df['Time Measured'].dt.round(sampling_rate_for_time_binning)
     df['Time Measured'] = df['Time Measured'].fillna(method='ffill').fillna(method='bfill')
     return df
 
+
 def get_commands_data(df):
-    """ Pick the command infos,
-    that means meta-infos containing
+    """ Pick the command info,
+    that means meta-info containing
         - exercise name,
         - session start/stop,
         - user-id
@@ -95,9 +81,11 @@ def get_commands_data(df):
     Returns
     -------
     pd.DataFrame
-        Only rows containing meta infos
+        Only rows containing meta info
     """
-    return df[df['Command'].notna()][['Time Received', 'Time Measured', 'Command', 'Exercise', 'SessionId', 'UserName', 'Info']]
+    return df[df['Command'].notna()][
+        ['Time Received', 'Time Measured', 'Command', 'Exercise', 'SessionId', 'UserName', 'Info']]
+
 
 def spread_sensors_to_columns(df: pd.DataFrame):
     """ Spread sensor-values in a pivot table to make each column represent an individual sensor-dimension
@@ -110,13 +98,15 @@ def spread_sensors_to_columns(df: pd.DataFrame):
     -------
     pd.DataFrame
     """
-    df = pd.pivot_table(df, index='Time Measured', columns='Client', values=['Value', 'ValueTwo', 'ValueThree'], aggfunc=np.mean)
+    df = pd.pivot_table(df, index='Time Measured', columns='Client', values=['Value', 'ValueTwo', 'ValueThree'],
+                        aggfunc=np.mean)
     df.columns = [col[1] + "_" + col[0] for col in df.columns.values]
     df = df.reset_index()
     return df
 
+
 def sync_data_with_continuously_sampled_timeline(df):
-    """ Syncronise data with a coherent timeline. This makes the time steps equal from row to row.
+    """ Synchronise data with a coherent timeline. This makes the time steps equal from row to row.
 
     Parameters
     ----------
@@ -127,9 +117,12 @@ def sync_data_with_continuously_sampled_timeline(df):
     pd.DataFrame
     """
     df_timeline = pd.DataFrame()
-    df_timeline['Time Measured'] = np.arange(df['Time Measured'].min(), df['Time Measured'].max()+dt.timedelta(milliseconds=200), np.timedelta64(200, 'ms'))
+    df_timeline['Time Measured'] = np.arange(df['Time Measured'].min(),
+                                             df['Time Measured'].max() + dt.timedelta(milliseconds=200),
+                                             np.timedelta64(200, 'ms'))
     df = pd.merge_asof(df_timeline, df)
     return df
+
 
 def add_commands_info(df, df_commands):
     """ Add meta info to preprocessed sensor data
@@ -147,13 +140,14 @@ def add_commands_info(df, df_commands):
     """
     return df.merge(df_commands, how='left')
 
-def construct_input_conditions(pred_exercise, one_hot_encoder_path, window_size):
+
+def construct_input_conditions(prediction_exercise, one_hot_encoder_path, window_size):
     """ Transforms the predicted labels of the exercise classification model into one-hot vectors and return the stacked one-hot vectors.
 
     Parameters
     ----------
-    pred_exercise: list(str)
-        List of exercise labels. Contains one label per sample in df_pred_samples.
+    prediction_exercise: list(str)
+        List of exercise labels. Contains one label per sample in df_prediction_samples.
     one_hot_encoder_path: str
         Path to load the one hot encoder.
     window_size: int
@@ -163,11 +157,11 @@ def construct_input_conditions(pred_exercise, one_hot_encoder_path, window_size)
     np.array
     """
     one_hot_encoder = joblib.load(one_hot_encoder_path)
-    exercises_one_hot = one_hot_encoder.transform(np.array(pred_exercise).reshape((-1,1))).toarray()
+    exercises_one_hot = one_hot_encoder.transform(np.array(prediction_exercise).reshape((-1, 1))).toarray()
 
     exercises_one_hot_extended = []
     for i in range(exercises_one_hot.shape[0]):
-        cond_list = [exercises_one_hot[i]]*window_size
+        cond_list = [exercises_one_hot[i]] * window_size
         exercises_one_hot_extended.extend(cond_list)
 
     number_of_categories = exercises_one_hot.shape[1]
@@ -202,6 +196,7 @@ def construct_input_sensor_data(data):
 
     return np.stack(row_arrays_time_series, axis=0)
 
+
 def wrangle_data(df):
     df = time_binning(df)
     df = spread_sensors_to_columns(df)
@@ -211,7 +206,7 @@ def wrangle_data(df):
     return df
 
 
-def build_window_samples(df, WINDOW_SIZE):
+def build_window_samples(df, window_size):
     """
         Builds Windows for the prediction, removes all samples with smaller size than the window size and resets index afterwards
         ----------
@@ -228,11 +223,11 @@ def build_window_samples(df, WINDOW_SIZE):
     df_prediction_samples = pd.DataFrame()
     df.reset_index(drop=True, inplace=True)
     for col in df.columns:
-        df_prediction_samples[col] = [x[1] for x in df[col].groupby(df.index//WINDOW_SIZE)]
+        df_prediction_samples[col] = [x[1] for x in df[col].groupby(df.index // window_size)]
 
     # remove samples with size smaller than window size
     minimum_sample_size_this_row = df_prediction_samples.apply(lambda x: min([len(y) for y in x]), axis=1)
-    df_prediction_samples = df_prediction_samples[minimum_sample_size_this_row == WINDOW_SIZE]
+    df_prediction_samples = df_prediction_samples[minimum_sample_size_this_row == window_size]
 
     # reset index after row removing
     df_prediction_samples.reset_index(inplace=True, drop=True)
@@ -252,4 +247,3 @@ def build_window_samples(df, WINDOW_SIZE):
     #                         ]
     # df = df[relevant_sensors]
     return df_prediction_samples
-    

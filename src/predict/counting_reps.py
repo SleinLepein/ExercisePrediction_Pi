@@ -3,6 +3,7 @@ import pandas as pd
 from scipy import integrate
 from scipy.signal import find_peaks
 
+
 def integrate_acceleration(df, exercise, horizontal_dist, vertical_dist_lower_bound, vertical_dist_upper_bound):
     """
     df: pandas.Dataframe
@@ -18,19 +19,19 @@ def integrate_acceleration(df, exercise, horizontal_dist, vertical_dist_lower_bo
     """
 
     # Not all mappings are final (Beinstrecker is just a placeholder)
-    exercise_sensor_mapping = { 
-                                'Ausfallschritte': ['gyro_bar_Value', 'gyro_bar_ValueTwo', 'gyro_bar_ValueThree'],
-                                'Brustpresse': ['gyro_bar_Value', 'gyro_bar_ValueTwo', 'gyro_bar_ValueThree'],
-                                'Biceps Curl': ['gyro_cable_left_ValueThree', 'gyro_cable_right_ValueThree'],
-                                'Bizeps_free': ['gyro_cable_left_Value', 'gyro_cable_left_ValueTwo', 'gyro_cable_left_ValueThree'],
-                                'Crossover': ['gyro_cable_left_ValueThree', 'gyro_cable_right_ValueThree'],
-                                'Squats': ['gyro_bar_ValueThree'],
-                                'Trizepskabelzug': ['gyro_cable_left_ValueThree', 'gyro_cable_right_ValueThree'],
-                                'Beinstrecker': ['gyro_bar_Value', 'gyro_bar_ValueTwo', 'gyro_bar_ValueThree']
-                               }
+    exercise_sensor_mapping = {
+        'Ausfallschritte': ['gyro_bar_Value', 'gyro_bar_ValueTwo', 'gyro_bar_ValueThree'],
+        'Brustpresse': ['gyro_bar_Value', 'gyro_bar_ValueTwo', 'gyro_bar_ValueThree'],
+        'Biceps Curl': ['gyro_cable_left_ValueThree', 'gyro_cable_right_ValueThree'],
+        'Bizeps_free': ['gyro_cable_left_Value', 'gyro_cable_left_ValueTwo', 'gyro_cable_left_ValueThree'],
+        'Crossover': ['gyro_cable_left_ValueThree', 'gyro_cable_right_ValueThree'],
+        'Squats': ['gyro_bar_ValueThree'],
+        'Trizepskabelzug': ['gyro_cable_left_ValueThree', 'gyro_cable_right_ValueThree'],
+        'Beinstrecker': ['gyro_bar_Value', 'gyro_bar_ValueTwo', 'gyro_bar_ValueThree']
+    }
 
     relevant_sensor_list = exercise_sensor_mapping[exercise]
-    
+
     # select the gyro sensor with the highest standard deviation to approximate the repetitions.
     selected_sensor = ''
     max_std = 0.0
@@ -53,9 +54,11 @@ def integrate_acceleration(df, exercise, horizontal_dist, vertical_dist_lower_bo
     position = integrate.cumtrapz(values_velocity_normalized, dx=1.0, initial=0)
 
     # find the local maxima on the position curve to approximate repetitions
-    local_maxima = calculate_local_maxima(position, horizontal_dist, vertical_dist_lower_bound, vertical_dist_upper_bound)
+    local_maxima = calculate_local_maxima(position, horizontal_dist, vertical_dist_lower_bound,
+                                          vertical_dist_upper_bound)
 
     return len(local_maxima)
+
 
 def calculate_local_maxima(signal, horizontal_dist, vertical_dist_lower_bound, vertical_dist_upper_bound):
     """
@@ -76,5 +79,6 @@ def calculate_local_maxima(signal, horizontal_dist, vertical_dist_lower_bound, v
         Contains all the local maxima that passed the threshold filtering.
     """
 
-    filtered_local_maxima, props = find_peaks(np.array(signal), distance=horizontal_dist, prominence=[vertical_dist_lower_bound, vertical_dist_upper_bound])
+    filtered_local_maxima, props = find_peaks(np.array(signal), distance=horizontal_dist,
+                                              prominence=[vertical_dist_lower_bound, vertical_dist_upper_bound])
     return filtered_local_maxima
