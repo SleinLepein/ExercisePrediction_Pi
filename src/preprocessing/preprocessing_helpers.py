@@ -142,8 +142,8 @@ def add_commands_info(df, df_commands):
 
 
 def construct_input_conditions(prediction_exercise, one_hot_encoder_path, window_size):
-    """ Transforms the predicted labels of the exercise classification model into one-hot vectors and return the stacked one-hot vectors.
-
+    """
+    Transforms the predicted labels of the exercise classification model into one-hot vectors and return the stacked one-hot vectors.
     Parameters
     ----------
     prediction_exercise: list(str)
@@ -172,15 +172,15 @@ def construct_input_conditions(prediction_exercise, one_hot_encoder_path, window
 
 def construct_input_sensor_data(data):
     """
-        Takes the sensor data arrays from the dataframe cells and puts them into a 2d numpy array, which will be used as input for the keras anomaly detection model.
-        Parameters
-        ----------
-        data : pd.DataFrame
-            Contains the windowed sensor input data.
-
-        Returns
-        ---------
-        np.array
+    Takes the sensor data arrays from the dataframe cells and puts them into a 2d numpy array,
+    which will be used as input for the keras anomaly detection model.
+    Parameters
+    ----------
+    data : pd.DataFrame
+        Contains the windowed sensor input data.
+    Returns
+    ---------
+    np.array
     """
     row_arrays_time_series = []
     for idx, row in data.iterrows():
@@ -198,6 +198,15 @@ def construct_input_sensor_data(data):
 
 
 def wrangle_data(df):
+    """
+    wrangles the data of the the df
+    ----------
+    df : pd.DataFrame
+        contains the data to predict on
+    Returns
+    -------
+    pd.DataFrame
+    """
     df = time_binning(df)
     df = spread_sensors_to_columns(df)
     df = sync_data_with_continuously_sampled_timeline(df)
@@ -208,16 +217,15 @@ def wrangle_data(df):
 
 def build_window_samples(df, window_size):
     """
-        Builds Windows for the prediction, removes all samples with smaller size than the window size and resets index afterwards
-        ----------
-        df : pd.DataFrame
-            Contains Dataframe
-        WINDOW_SIZE: int
-            The size for the windows
-
-        Returns
-        ---------
-        np.array
+    Builds Windows for the prediction, removes all samples with smaller size than the window size and resets index afterwards
+    ----------
+    df : pd.DataFrame
+        Contains Dataframe
+    WINDOW_SIZE: int
+        The size for the windows
+    Returns
+    ---------
+    np.array
     """
     # build samples with right window size
     df_prediction_samples = pd.DataFrame()

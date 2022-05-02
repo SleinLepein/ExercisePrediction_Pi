@@ -4,6 +4,12 @@ PATH = "./old_data"
 
 
 def move_data(path_from):
+    """
+    moves csv files into another folder
+    ----------
+    path_from : String
+        path to the directory containing the files that should be moved
+    """
     if not os.path.isdir(PATH):
         os.mkdir(PATH)
 
@@ -17,6 +23,12 @@ def move_data(path_from):
 
 
 def delete_data(path_from):
+    """
+    delete files in a given folder
+    ----------
+    path_from : String
+        path to the directory containing the files that should be removed
+    """
     if not os.path.isdir(path_from):
         return None
 

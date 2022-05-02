@@ -7,13 +7,16 @@ class Model:
         self.model = model
 
     def read(self, path):
-        """opens the model, which is a pickle file
-
-        Args:
-            path ([string]): path to the model.pkl file
-
-        Returns:
-            model: the already trained model on which we can make predictions
+        """
+        opens the model, which is a pickle file
+        Parameters
+        ----------
+        path : string
+            path to the model.pkl file
+        Returns
+        -------
+        model
+            the already trained model on which we can make predictions
         """
         with open(path, 'rb') as input_file:
             self.model = unpickler_load(input_file)

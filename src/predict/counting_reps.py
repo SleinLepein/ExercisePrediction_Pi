@@ -6,16 +6,21 @@ from scipy.signal import find_peaks
 
 def integrate_acceleration(df, exercise, horizontal_dist, vertical_dist_lower_bound, vertical_dist_upper_bound):
     """
-    df: pandas.Dataframe
-        Contains the input dataframe.
-    exercise: str
-        Label of the exercise.
-    horizontal_dist: int
-        Minimum number of timesteps between to repetitions.
-    vertical_dist_lower_bound: float
-        Determines the minimum vertical distance between a repetition and the surrounding points in the signal.
-    vertical_dist_upper_bound: float
-        Determines the maximum vertical distance between a repetition and the surrounding points in the signal.
+    Parameters
+    ----------
+    df : pd.DataFrame
+        contains the input dataframe
+    exercise : String
+        label of the exercise
+    horizontal_dist : int
+        minimum number of timesteps between repetitions
+    vertical_dist_lower_bound : float
+        determines the minimum vertical distance between a repetition and the surrounding points in the signal
+    vertical_dist_upper_bound : float
+        determines the maximum vertical distance between a repetition and the surrounding points in the signal
+    Returns
+    -------
+    local_maxima
     """
 
     # Not all mappings are final (Beinstrecker is just a placeholder)
@@ -65,18 +70,18 @@ def calculate_local_maxima(signal, horizontal_dist, vertical_dist_lower_bound, v
     Searches for local maxima in a given signal
     Parameters
     ----------
-    signal: list(float)
-        Contains the signal.
-    horizontal_dist: int
-        Minimum number of timesteps between to repetitions.
-    vertical_dist_lower_bound: float
-        Determines the minimum vertical distance between a repetition and the surrounding points in the signal.
-    vertical_dist_upper_bound: float
-        Determines the maximum vertical distance between a repetition and the surrounding points in the signal.
+    signal : list(float)
+        contains the signal
+    horizontal:dist : int
+        minimum number of timesteps between repetitions
+    vertical_dist_lower_bound : float
+        determines the minimum vertical distance between a repetition and the surrounding points in the signal
+    vertical_dist_upper_bound : float
+        determines the maximum vertical distance between a repetition and the surrounding points in the signal
     Returns
-    ----------
+    -------
     list(int)
-        Contains all the local maxima that passed the threshold filtering.
+        contains all the local maxima that passed the threshold filtering
     """
 
     filtered_local_maxima, props = find_peaks(np.array(signal), distance=horizontal_dist,

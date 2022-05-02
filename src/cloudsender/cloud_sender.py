@@ -9,6 +9,13 @@ CONTAINER_NAME = "csvbackup"
 
 
 def upload_to_azure_cloud(path):
+    """
+    creates prediction.txt file and sends both txt and csv file into the azure cloud blob storage
+    Parameters
+    ----------
+    path : String
+        path to the folder containing the csv files
+    """
     container_client = ContainerClient.from_connection_string(CONNECTION_STR, CONTAINER_NAME)
     files_raw_data = [path + "/" + x for x in os.listdir(path)]
     now = datetime.datetime.now()

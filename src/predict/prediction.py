@@ -16,6 +16,21 @@ VERTICAL_DIST_UPPER_BOUND = 1000  # setting the upper bound this high renders it
 
 
 def construct_message(df_path):
+    """
+    predicts on the data and constructs a message to later return to the app
+    Parameters
+    ----------
+    df_path : String
+        path to the csv file to predict on
+    Returns
+    -------
+    prediction : String
+        the prediction message that is then send to the app
+    batch_prediction : list(String)
+        list of all predicted windows (currently only used as a backup data to send to the azure cloud)
+    success : bool
+        True when prediction was successful
+    """
     try:
         df = read_raw_csv_data(df_path)
     except Exception as ex:
@@ -54,8 +69,27 @@ def construct_message(df_path):
             return f"Not enough data to make a Prediction [{df.shape[0]}/{MIN_ROWS} rows]\n", None, False
 
 
-# does not wait for sets to be finished, just predicts everything in the df
 def predict_df(list_of_predicted_batches, df):
+    """
+    checks what exercise is the most common, the probability of the prediction,
+    the amount of repetitions and if the file can be deleted
+    Parameters
+    ----------
+    list_of_predicted_batches : list(String)
+        list of all windows and the predicted exercise
+    Returns
+    -------
+    exercise : String
+        the most common exercise in the df
+    probability :  float
+        the probability of the prediction
+    repetitions : int
+        the amount of repetitions in the df
+    delete_file : bool
+        True if the file can be deleted (only relevant when we predict on sets instead of a whole df)
+    set_finished : bool
+        True when there are pauses at the end of the df so that the set might be finished
+    """
     # List that contains only the predicted exercise (not the probability)
     list_of_all_exercises = [item[0] for item in list_of_predicted_batches]
     # The DF contains only 'nothing' so there is no exercise
