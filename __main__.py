@@ -61,16 +61,13 @@ class FileHandler(FileSystemEventHandler):
         if file_path.endswith(".csv"):
             print(f"Event Type:\t{event.event_type}\nPath:\t\t{file_path}\nTime:\t\t{time.asctime()}\n")
             prediction, batch_prediction, success, set_finished = construct_message(file_path)
-            if success:
+            if success and set_finished:
                 print("Sending ...")
                 print(prediction)
                 send_to_app(prediction)
-                if set_finished:
-                    upload_set_to_azure_cloud(prediction, batch_prediction, file_path)
-                    delete_data(PATH)
-                else:
-                    print("Set not finished")
-            else:
+                upload_set_to_azure_cloud(prediction, batch_prediction, file_path)
+                delete_data(PATH)
+            elif not success:
                 print(f"Error:\n{prediction}")
 
 

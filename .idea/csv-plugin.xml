@@ -24,6 +24,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\data\2022_03_03_Biceps Curl_richtig - Kopie.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\data\2022_03_03_Trizepskabelzug_falsch.csv">
           <value>
             <Attribute>
@@ -32,6 +39,13 @@
           </value>
         </entry>
         <entry key="\raw_data\2022_03_03_Ausfallschritte_richtig.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\raw_data\2022_03_03_Biceps Curl_richtig - Kopie.csv">
           <value>
             <Attribute>
               <option name="separator" value=";" />
