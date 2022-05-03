@@ -5,7 +5,7 @@ from watchdog.events import FileSystemEventHandler
 from src.predict.prediction import construct_message
 from src.sender.sender import send_to_app
 from src.processing.change_data import delete_data
-from src.cloudsender.cloud_sender import upload_to_azure_cloud
+from src.cloudsender.cloud_sender import upload_to_azure_cloud, upload_set_to_azure_cloud
 
 PATH = "./raw_data"
 
@@ -60,10 +60,16 @@ class FileHandler(FileSystemEventHandler):
         # Prevent the prediction to run on any non-csv-file
         if file_path.endswith(".csv"):
             print(f"Event Type:\t{event.event_type}\nPath:\t\t{file_path}\nTime:\t\t{time.asctime()}\n")
-            prediction, _, success = construct_message(file_path)
+            prediction, batch_prediction, success, set_finished = construct_message(file_path)
             if success:
                 print("Sending ...")
+                print(prediction)
                 send_to_app(prediction)
+                if set_finished:
+                    upload_set_to_azure_cloud(prediction, batch_prediction, file_path)
+                    delete_data(PATH)
+                else:
+                    print("Set not finished")
             else:
                 print(f"Error:\n{prediction}")
 
