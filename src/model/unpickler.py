@@ -5,6 +5,7 @@ class Unpickler(pickle.Unpickler):
     def find_class(self, module, name):
         """
         changes the imports of a given pickle file
+
         Parameters
         ----------
         module : String

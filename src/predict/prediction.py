@@ -18,6 +18,7 @@ VERTICAL_DIST_UPPER_BOUND = 1000  # setting the upper bound this high renders it
 def construct_message(df_path):
     """
     predicts on the data and constructs a message to later return to the app
+
     Parameters
     ----------
     df_path : String
@@ -74,6 +75,7 @@ def predict_df(list_of_predicted_batches, df):
     """
     checks what exercise is the most common, the probability of the prediction,
     the amount of repetitions and if the file can be deleted
+
     Parameters
     ----------
     list_of_predicted_batches : list(String)

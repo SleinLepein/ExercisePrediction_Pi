@@ -6,6 +6,8 @@ PATH = "./old_data"
 def move_data(path_from):
     """
     moves csv files into another folder
+
+    Parameters
     ----------
     path_from : String
         path to the directory containing the files that should be moved
@@ -25,6 +27,8 @@ def move_data(path_from):
 def delete_data(path_from):
     """
     delete files in a given folder
+
+    Parameters
     ----------
     path_from : String
         path to the directory containing the files that should be removed

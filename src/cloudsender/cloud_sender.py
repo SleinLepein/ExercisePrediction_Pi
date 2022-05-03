@@ -11,6 +11,7 @@ CONTAINER_NAME = "csvbackup"
 def upload_to_azure_cloud(path):
     """
     creates prediction.txt file and sends both txt and csv file into the azure cloud blob storage
+
     Parameters
     ----------
     path : String
@@ -50,6 +51,7 @@ def upload_set_to_azure_cloud(prediction, batch, file_path):
     """
     creates prediction.txt file and sends both txt and csv file into the azure cloud blob storage
     will be called when a set is finished to create separate csv files for each set/exercise
+
     Parameters
     ----------
     prediction : Str

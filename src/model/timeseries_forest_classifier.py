@@ -26,6 +26,7 @@ class ForestClassifierTrainer:
     def fit(self, training_data: TrainingData):
         """
         Fit method to train forest classifier
+
         Parameters
         ----------
         training_data: TrainingData-Object

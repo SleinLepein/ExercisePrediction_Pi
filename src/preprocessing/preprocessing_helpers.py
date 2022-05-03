@@ -5,7 +5,8 @@ import joblib
 
 
 def read_raw_csv_data(path):
-    """ Reads in the csv raw data
+    """
+    Reads in the csv raw data
 
     Parameters
     ----------
@@ -22,6 +23,7 @@ def read_raw_csv_data(path):
 
 def correct_columns(df, columns):
     """
+    fix columns and delete unnecessary meta info
 
     Parameters
     ----------
@@ -45,6 +47,7 @@ def correct_columns(df, columns):
 
 def time_binning(df, sampling_rate_for_time_binning='200ms'):
     """
+    create time bins with 0.2s
 
     Parameters
     ----------
@@ -68,12 +71,14 @@ def time_binning(df, sampling_rate_for_time_binning='200ms'):
 
 
 def get_commands_data(df):
-    """ Pick the command info,
+    """
+    Pick the command info,
     that means meta-info containing
         - exercise name,
         - session start/stop,
         - user-id
         - etc
+
     Parameters
     ----------
     df : pd.DataFrame
@@ -88,7 +93,8 @@ def get_commands_data(df):
 
 
 def spread_sensors_to_columns(df: pd.DataFrame):
-    """ Spread sensor-values in a pivot table to make each column represent an individual sensor-dimension
+    """
+    Spread sensor-values in a pivot table to make each column represent an individual sensor-dimension
 
     Parameters
     ----------
@@ -106,7 +112,8 @@ def spread_sensors_to_columns(df: pd.DataFrame):
 
 
 def sync_data_with_continuously_sampled_timeline(df):
-    """ Synchronise data with a coherent timeline. This makes the time steps equal from row to row.
+    """
+    Synchronise data with a coherent timeline. This makes the time steps equal from row to row.
 
     Parameters
     ----------
@@ -125,7 +132,8 @@ def sync_data_with_continuously_sampled_timeline(df):
 
 
 def add_commands_info(df, df_commands):
-    """ Add meta info to preprocessed sensor data
+    """
+    Add meta info to preprocessed sensor data
 
     Parameters
     ----------
@@ -144,6 +152,7 @@ def add_commands_info(df, df_commands):
 def construct_input_conditions(prediction_exercise, one_hot_encoder_path, window_size):
     """
     Transforms the predicted labels of the exercise classification model into one-hot vectors and return the stacked one-hot vectors.
+
     Parameters
     ----------
     prediction_exercise: list(str)
@@ -174,6 +183,7 @@ def construct_input_sensor_data(data):
     """
     Takes the sensor data arrays from the dataframe cells and puts them into a 2d numpy array,
     which will be used as input for the keras anomaly detection model.
+
     Parameters
     ----------
     data : pd.DataFrame
@@ -200,6 +210,8 @@ def construct_input_sensor_data(data):
 def wrangle_data(df):
     """
     wrangles the data of the the df
+
+    Parameters
     ----------
     df : pd.DataFrame
         contains the data to predict on
@@ -218,10 +230,12 @@ def wrangle_data(df):
 def build_window_samples(df, window_size):
     """
     Builds Windows for the prediction, removes all samples with smaller size than the window size and resets index afterwards
+
+    Parameters
     ----------
     df : pd.DataFrame
         Contains Dataframe
-    WINDOW_SIZE: int
+    window_size: int
         The size for the windows
     Returns
     ---------

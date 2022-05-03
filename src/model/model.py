@@ -9,6 +9,7 @@ class Model:
     def read(self, path):
         """
         opens the model, which is a pickle file
+
         Parameters
         ----------
         path : string

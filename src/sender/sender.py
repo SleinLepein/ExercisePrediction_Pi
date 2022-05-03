@@ -18,6 +18,8 @@ client.connect(broker, port)
 def send_to_app(msg):
     """
     sends the prediction to the app
+
+    Parameters
     ----------
     msg : String
         contains the message that will be send to the app

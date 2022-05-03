@@ -6,6 +6,8 @@ from scipy.signal import find_peaks
 
 def integrate_acceleration(df, exercise, horizontal_dist, vertical_dist_lower_bound, vertical_dist_upper_bound):
     """
+    integrates the acceleration data
+
     Parameters
     ----------
     df : pd.DataFrame
@@ -68,11 +70,12 @@ def integrate_acceleration(df, exercise, horizontal_dist, vertical_dist_lower_bo
 def calculate_local_maxima(signal, horizontal_dist, vertical_dist_lower_bound, vertical_dist_upper_bound):
     """
     Searches for local maxima in a given signal
+
     Parameters
     ----------
     signal : list(float)
         contains the signal
-    horizontal:dist : int
+    horizontal_dist : int
         minimum number of timesteps between repetitions
     vertical_dist_lower_bound : float
         determines the minimum vertical distance between a repetition and the surrounding points in the signal
