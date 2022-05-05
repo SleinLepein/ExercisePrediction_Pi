@@ -67,17 +67,15 @@ def upload_set_to_azure_cloud(prediction, batch, file_path):
         filename = file_path[file_path.rfind("/")+1:file_path.rfind(".csv")]
         prediction_filename = file_path.replace(".csv", ".txt")
         with open(prediction_filename, 'w') as data:
-            data.write(f"{filename}.csv\n")
-            data.write(batch)
+            data.write(str(batch))
             data.write(prediction)
         blob_client = container_client.get_blob_client(
-            f"{now.year}/{now.month}/{now.day}/{filename}_{now.hour}{now.minute}{now.second}/{filename}_{now.hour}:{now.minute}:{now.second}.csv")
+            f"{now.year}/{now.month}/{now.day}/{filename}_{now.hour}{now.minute}{now.second}/{filename}.csv")
         with open(file_path, "rb") as data:
             blob_client.upload_blob(data)
             print(f"File: {file_path} uploaded to azure")
-
         blob_client = container_client.get_blob_client(
-            f"{now.year}/{now.month}/{now.day}/{filename}_{now.hour}{now.minute}{now.second}/{filename}_{now.hour}:{now.minute}:{now.second}.txt")
+            f"{now.year}/{now.month}/{now.day}/{filename}_{now.hour}{now.minute}{now.second}/{filename}.txt")
         with open(prediction_filename, "rb") as data:
             blob_client.upload_blob(data)
             print(f"File: {prediction_filename} uploaded to azure")
