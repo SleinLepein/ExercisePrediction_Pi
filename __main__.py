@@ -62,11 +62,11 @@ class FileHandler(FileSystemEventHandler):
             print(f"Event Type:\t{event.event_type}\nPath:\t\t{file_path}\nTime:\t\t{time.asctime()}\n")
             prediction, batch_prediction, success, set_finished = construct_message(file_path)
             if success and set_finished:
-                print(prediction)
                 send_to_app(prediction)
                 upload_set_to_azure_cloud(prediction, batch_prediction, file_path)
                 delete_data(PATH, "")
-            elif not success:
+            else:
+                send_to_app(prediction)
                 print(f"Error:\n{prediction}")
 
 
