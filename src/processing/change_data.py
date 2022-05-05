@@ -24,7 +24,7 @@ def move_data(path_from):
             pass
 
 
-def delete_data(path_from):
+def delete_data(path_from, file_format):
     """
     delete files in a given folder
 
@@ -32,11 +32,16 @@ def delete_data(path_from):
     ----------
     path_from : String
         path to the directory containing the files that should be removed
+    file_format : String
+        format of the file
     """
     if not os.path.isdir(path_from):
         return None
-
-    files_raw_data = [path_from + "/" + x for x in os.listdir(path_from)]
+    if file_format:
+        files_raw_data = [path_from + "/" + x for x in os.listdir(path_from) if x.endswith(file_format)]
+    else:
+        files_raw_data = [path_from + "/" + x for x in os.listdir(path_from) if x.endswith(file_format)]
+    print(files_raw_data)
     for i in range(len(files_raw_data)):
         try:
             os.remove(files_raw_data[i])
