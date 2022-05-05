@@ -6,5 +6,3 @@ scipy
 joblib
 watchdog
 paho-mqtt
-azure-storage-blob
-azure-core
