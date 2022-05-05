@@ -77,6 +77,8 @@ def predict_df(list_of_predicted_batches, df):
     ----------
     list_of_predicted_batches : list(String)
         list of all windows and the predicted exercise
+    df : pd.DataFrame
+        dataframe containing all sensor data (necessary for repetition count func)
     Returns
     -------
     exercise : String

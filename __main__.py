@@ -61,11 +61,7 @@ class FileHandler(FileSystemEventHandler):
         if file_path.endswith(".csv"):
             print(f"Event Type:\t{event.event_type}\nPath:\t\t{file_path}\nTime:\t\t{time.asctime()}\n")
             prediction, _, success = construct_message(file_path)
-            if success:
-                print("Sending ...")
-                send_to_app(prediction)
-            else:
-                print(f"Error:\n{prediction}")
+            send_to_app(prediction)
 
 
 if __name__ == "__main__":

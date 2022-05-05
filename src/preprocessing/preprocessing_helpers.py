@@ -37,10 +37,11 @@ def correct_columns(df, columns):
         DataFrame without unnecessary columns and columns in the right order
 
     """
-    columns_not_needed = list(set(list(df)).symmetric_difference(set(columns)))
-    df = df.drop(columns_not_needed, axis=1)
-    df = df[columns]
-    return df
+    if list(df) == columns:
+        return df
+    else:
+        df.columns = columns
+        return df
 
 
 def time_binning(df, sampling_rate_for_time_binning='200ms'):
