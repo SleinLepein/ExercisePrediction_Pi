@@ -34,7 +34,7 @@ def start_observer():
         except Exception as ex:
             print(f"An error occurred when uploading data to the cloud\n{ex}")
         else:
-            delete_data(PATH, None)
+            delete_data(PATH, "")
 
 
 class FileHandler(FileSystemEventHandler):
@@ -65,7 +65,7 @@ class FileHandler(FileSystemEventHandler):
                 print(prediction)
                 send_to_app(prediction)
                 upload_set_to_azure_cloud(prediction, batch_prediction, file_path)
-                delete_data(PATH, None)
+                delete_data(PATH, "")
             elif not success:
                 print(f"Error:\n{prediction}")
 
