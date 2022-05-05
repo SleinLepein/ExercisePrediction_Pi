@@ -42,9 +42,7 @@ def correct_columns(df, columns):
     if list(df) == columns:
         return df
     else:
-        columns_not_needed = list(set(list(df)).symmetric_difference(set(columns)))
-        df = df.drop(columns_not_needed, axis=1)
-        df = df[columns]
+        df.columns = columns
         return df
 
 
