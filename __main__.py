@@ -4,8 +4,6 @@ from watchdog.observers.polling import PollingObserver
 from watchdog.events import FileSystemEventHandler
 from src.predict.prediction import construct_message
 from src.sender.sender import send_to_app
-from src.processing.change_data import delete_data
-from src.cloudsender.cloud_sender import upload_to_azure_cloud
 
 PATH = "./raw_data"
 
@@ -16,9 +14,8 @@ def start_observer():
     if not os.path.isdir(PATH):
         os.mkdir(PATH)
 
-    observer.schedule(file_event_handler, path=PATH, recursive=False)
+    observer.schedule(file_event_handler, path=PATH)
     observer.start()
-    print("Observer started ...\n")
 
     try:
         while True:
@@ -26,15 +23,6 @@ def start_observer():
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
-
-    # Try sending data to cloud and if it was successful delete it locally
-    if input("\nMove files to the cloud and delete locally? [Y/N]\n") in ["y", "Y", "ye", "Ye", "yes", "Yes"]:
-        try:
-            upload_to_azure_cloud(PATH)
-        except Exception as ex:
-            print(f"An error occurred when uploading data to the cloud\n{ex}")
-        else:
-            delete_data(PATH)
 
 
 class FileHandler(FileSystemEventHandler):
@@ -59,8 +47,7 @@ class FileHandler(FileSystemEventHandler):
             file_path = event.src_path
         # Prevent the prediction to run on any non-csv-file
         if file_path.endswith(".csv"):
-            print(f"Event Type:\t{event.event_type}\nPath:\t\t{file_path}\nTime:\t\t{time.asctime()}\n")
-            prediction, _, success = construct_message(file_path)
+            prediction = construct_message(file_path)
             send_to_app(prediction)
 
 

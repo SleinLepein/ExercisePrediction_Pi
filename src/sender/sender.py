@@ -6,7 +6,6 @@ port = 1883
 
 
 def on_publish(client, userdata, result):
-    print("Prediction send \n")
     pass
 
 
@@ -23,5 +22,3 @@ def send_to_app(msg):
         contains the message that will be send to the app
     """
     client.publish(topic, msg, 1, False)
-    print("Published in " + topic)
-    print(msg)
