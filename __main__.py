@@ -31,7 +31,7 @@ class FileHandler(FileSystemEventHandler):
 
     def on_modified(self, event):
         # Prevent the function from running multiple times in a row by checking previous runtime
-        if time.time() - self.last_run_time < 5.0:
+        if time.time() - self.last_run_time < 10.0:
             return None
         else:
             self.last_run_time = time.time()
